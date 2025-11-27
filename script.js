@@ -174,8 +174,10 @@ board.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 board.addEventListener('touchmove', (e) => {
-    const touchY = e.touches[0].clientY;
-    const dy = touchY - touchStartY;
+    e.preventDefault(); // requires passive: false
+    const t = e.touches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
 
     // only block when swiping down (dy>0) and the page is at the top
     const atTop = window.scrollY === 0 || (document.scrollingElement && document.scrollingElement.scrollTop === 0);
