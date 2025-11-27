@@ -22,6 +22,7 @@ let intervalId = null;
 let timeIntervalId = null;
 let food = {x: Math.floor(Math.random() * rows), y: Math.floor(Math.random() * cols)};
 
+
 const blocks = []
 let Snake = [
     {    x: 5, y: 5    },
@@ -163,3 +164,36 @@ setInterval(() => {
     time.textContent = `${minutes}:${seconds}`;
 }, 1000);
 
+
+// Touch event handling for swipe gestures
+
+let touchStartX = 0;
+let touchStartY = 0;
+const SWIPE_THRESHOLD = 30;
+
+
+addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+}, { passive: true });
+
+addEventListener('touchend', (e) => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+
+    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
+
+    let newDir = null;
+    if (Math.abs(dx) > Math.abs(dy)) {
+        newDir = dx > 0 ? 'right' : 'left';
+    } else {
+        newDir = dy > 0 ? 'down' : 'up';
+    }
+
+    const opposite = { up: 'down', down: 'up', left: 'right', right: 'left' };
+    if (opposite[direction] === newDir) return; // ignore reverse swipe
+
+    direction = newDir;
+}, { passive: true });
