@@ -157,38 +157,38 @@ addEventListener('keydown', (e) => {
     direction = newDir;
 });
 
-let touchStartX = 0;
-let touchStartY = 0;
+// let touchStartX = 0;
+// let touchStartY = 0;
 
-document.addEventListener(touchmove, (e) => {
-    e.preventDefault();
-}, { passive: false });
+// document.addEventListener(touchmove, (e) => {
+//     e.preventDefault();
+// }, { passive: false });
 
-addEventListener('touchstart', (e) => {
-    const t = e.touches[0];
-    touchStartX = t.clientX;
-    touchStartY = t.clientY;
-}, { passive: true });
+// addEventListener('touchstart', (e) => {
+//     const t = e.touches[0];
+//     touchStartX = t.clientX;
+//     touchStartY = t.clientY;
+// }, { passive: true });
 
-addEventListener('touchend', (e) => {
-    const t = e.changedTouches[0];
-    const dx = t.clientX - touchStartX;
-    const dy = t.clientY - touchStartY;
+// addEventListener('touchend', (e) => {
+//     const t = e.changedTouches[0];
+//     const dx = t.clientX - touchStartX;
+//     const dy = t.clientY - touchStartY;
 
     
-    let newDir = null;
-    if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 0) newDir = 'right';  
-        else newDir = 'left';
-    } else {
-        if (dy > 0) newDir = 'down';  
-        else newDir = 'up';
-    }
-    const opposite = { up: 'down', down: 'up', left: 'right', right: 'left' };
-    if (opposite[direction] === newDir) return; // ignore reverse swipe
+//     let newDir = null;
+//     if (Math.abs(dx) > Math.abs(dy)) {
+//         if (dx > 0) newDir = 'right';  
+//         else newDir = 'left';
+//     } else {
+//         if (dy > 0) newDir = 'down';  
+//         else newDir = 'up';
+//     }
+//     const opposite = { up: 'down', down: 'up', left: 'right', right: 'left' };
+//     if (opposite[direction] === newDir) return; // ignore reverse swipe
 
-    direction = newDir;
-}, { passive: true });
+//     direction = newDir;
+// }, { passive: true });
 
 setInterval(() => {
     const now = new Date();
