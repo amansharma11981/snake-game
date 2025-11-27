@@ -26,6 +26,7 @@ let food = {x: Math.floor(Math.random() * rows), y: Math.floor(Math.random() * c
 const blocks = []
 let Snake = [
     {    x: 5, y: 5    },
+    {    x: 5, y: 6    },
  
    ]
 
@@ -40,6 +41,10 @@ for (let row = 0; row < rows ; row++)
         blocks[`${row}-${col}`] = block;
     }   
 }
+
+let touchStartX = 0;
+let touchStartY = 0;
+const SWIPE_THRESHOLD = 30; // minimum px to count as swipe
 
 function render() {
     
@@ -67,30 +72,34 @@ function render() {
         return;
     }
 
-    if (head.x === food.x && head.y === food.y) {
+    const ate = (head.x === food.x && head.y === food.y);
+    if (ate) {
         blocks[`${food.x}-${food.y}`].classList.remove('food');
         food = {x: Math.floor(Math.random() * rows), y: Math.floor(Math.random() * cols)};
-        Snake.unshift(head);
         score += 10;
         currentScoreElement.textContent = score;
         if (score > highScore) {
             highScore = score;
-          
             localStorage.setItem('highScore', highScore);
             highScoreElement.innerText = highScore.toString();
         }
     }
 
     Snake.forEach( segment => { 
-        blocks[`${segment.x}-${segment.y}`].classList.remove('fill');
+        const el = blocks[`${segment.x}-${segment.y}`];
+        if (el) el.classList.remove('fill', 'head');
     })
     Snake.unshift(head);
-    Snake.pop(); 
+   if (!ate) Snake.pop();
     
 
-    Snake.forEach( segment => {
-        blocks[`${segment.x}-${segment.y}`].classList.add('fill');
-    })
+    Snake.forEach((segment, idx) => {
+        const el = blocks[`${segment.x}-${segment.y}`];
+        if (!el) return;
+        if (idx === 0) el.classList.add('head');
+        else el.classList.add('fill');
+    });
+   
 }
 
 
@@ -122,7 +131,8 @@ addEventListener('click', (e) => {
 function resetGame() {
     blocks[`${food.x}-${food.y}`].classList.remove('food');
     Snake.forEach( segment => { 
-        blocks[`${segment.x}-${segment.y}`].classList.remove('fill');
+        const el = blocks[`${segment.x}-${segment.y}`];
+        if (el) el.classList.remove('fill','head');
     })
     score = 0;
     time = '00-00';
@@ -157,38 +167,42 @@ addEventListener('keydown', (e) => {
     direction = newDir;
 });
 
-// let touchStartX = 0;
-// let touchStartY = 0;
+addEventListener('touchstart', (e) => {
+   const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+}, { passive: true });
 
-// document.addEventListener(touchmove, (e) => {
-//     e.preventDefault();
-// }, { passive: false });
+addEventListener('touchmove', (e) => {
+    const touchY = e.touches[0].clientY;
+    const dy = touchY - touchStartY;
 
-// addEventListener('touchstart', (e) => {
-//     const t = e.touches[0];
-//     touchStartX = t.clientX;
-//     touchStartY = t.clientY;
-// }, { passive: true });
+    // only block when swiping down (dy>0) and the page is at the top
+    const atTop = window.scrollY === 0 || (document.scrollingElement && document.scrollingElement.scrollTop === 0);
+    if (dy > 0 && atTop) {
+        e.preventDefault(); // requires passive: false on this listener
+    }
+}, { passive: false });
 
-// addEventListener('touchend', (e) => {
-//     const t = e.changedTouches[0];
-//     const dx = t.clientX - touchStartX;
-//     const dy = t.clientY - touchStartY;
+addEventListener('touchend', (e) => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
 
-    
-//     let newDir = null;
-//     if (Math.abs(dx) > Math.abs(dy)) {
-//         if (dx > 0) newDir = 'right';  
-//         else newDir = 'left';
-//     } else {
-//         if (dy > 0) newDir = 'down';  
-//         else newDir = 'up';
-//     }
-//     const opposite = { up: 'down', down: 'up', left: 'right', right: 'left' };
-//     if (opposite[direction] === newDir) return; // ignore reverse swipe
+    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
 
-//     direction = newDir;
-// }, { passive: true });
+    let newDir = null;
+    if (Math.abs(dx) > Math.abs(dy)) {
+        newDir = dx > 0 ? 'right' : 'left';
+    } else {
+        newDir = dy > 0 ? 'down' : 'up';
+    }
+
+    const opposite = { up: 'down', down: 'up', left: 'right', right: 'left' };
+    if (opposite[direction] === newDir) return; // ignore reverse swipe
+
+    direction = newDir;
+}, { passive: true });
 
 setInterval(() => {
     const now = new Date();

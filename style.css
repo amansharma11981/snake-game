@@ -6,7 +6,7 @@
 html, body{
     height: 100%;
     width: 100%;
-   
+    overscroll-behavior-y: none;
 }
 html{
     background-color: var(--bg-primary-color);
@@ -17,7 +17,8 @@ html{
 :root {
     /* bg colors */
     --bg-primary-color: #0c0c0c; 
-    --bg-fill-color: #e0dddd;
+    --bg-headfill-color: #b89090;
+    --bg-bodyfill-color: #e0dddd;
     --bg-food-color: #ee1e1e;
    
     /* text color */
@@ -85,15 +86,19 @@ section .infos {
 }
 
 .board{
+    touch-action: none;
     border: 2px solid var(--border-primary-color);
     flex-grow: 1;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(10px,1fr));
     grid-template-rows: repeat(auto-fill ,minmax(10px,1fr));
 }
-   
+.head{
+    background-color: var(--bg-headfill-color);
+    border-radius: 50%;
+} 
 .fill{
-    background-color: var(--bg-fill-color);
+    background-color: var(--bg-bodyfill-color);
     border-radius: 50%;
 }
 .food{
