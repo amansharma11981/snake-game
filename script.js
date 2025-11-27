@@ -157,20 +157,9 @@ addEventListener('keydown', (e) => {
     direction = newDir;
 });
 
-setInterval(() => {
-    const now = new Date();
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    time.textContent = `${minutes}:${seconds}`;
-}, 1000);
-
-
-// Touch event handling for swipe gestures
-
 let touchStartX = 0;
 let touchStartY = 0;
 const SWIPE_THRESHOLD = 30;
-
 
 addEventListener('touchstart', (e) => {
     const t = e.touches[0];
@@ -197,3 +186,16 @@ addEventListener('touchend', (e) => {
 
     direction = newDir;
 }, { passive: true });
+
+setInterval(() => {
+    const now = new Date();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    time.textContent = `${minutes}:${seconds}`;
+}, 1000);
+
+
+// Touch event handling for swipe gestures
+
+
+

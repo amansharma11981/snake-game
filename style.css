@@ -92,7 +92,6 @@ section .infos {
     grid-template-rows: repeat(auto-fill ,minmax(10px,1fr));
 }
    
-.block{}
 .fill{
     background-color: var(--bg-fill-color);
     border-radius: 50%;
