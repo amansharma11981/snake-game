@@ -159,7 +159,10 @@ addEventListener('keydown', (e) => {
 
 let touchStartX = 0;
 let touchStartY = 0;
-const SWIPE_THRESHOLD = 30;
+
+document.addEventListener(toucchmove, (e) => {
+    e.preventDefault();
+}, { passive: false });
 
 addEventListener('touchstart', (e) => {
     const t = e.touches[0];
@@ -172,20 +175,20 @@ addEventListener('touchend', (e) => {
     const dx = t.clientX - touchStartX;
     const dy = t.clientY - touchStartY;
 
-    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
-
+    
     let newDir = null;
     if (Math.abs(dx) > Math.abs(dy)) {
-        newDir = dx > 0 ? 'right' : 'left';
+        if (dx > 0) newDir = 'right';  
+        else newDir = 'left';
     } else {
-        newDir = dy > 0 ? 'down' : 'up';
-    }
+        if (dy > 0) newDir = 'down';  
+        else newDir = 'up';
 
     const opposite = { up: 'down', down: 'up', left: 'right', right: 'left' };
     if (opposite[direction] === newDir) return; // ignore reverse swipe
 
     direction = newDir;
-}, { passive: true });
+}, { passive: true }});
 
 setInterval(() => {
     const now = new Date();
