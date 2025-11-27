@@ -42,9 +42,6 @@ for (let row = 0; row < rows ; row++)
     }   
 }
 
-let touchStartX = 0;
-let touchStartY = 0;
-const SWIPE_THRESHOLD = 30; // minimum px to count as swipe
 
 function render() {
     
@@ -167,44 +164,6 @@ addEventListener('keydown', (e) => {
     direction = newDir;
 });
 
-board.addEventListener('touchstart', (e) => {
-   const t = e.touches[0];
-    touchStartX = t.clientX;
-    touchStartY = t.clientY;
-}, { passive: true });
-
-board.addEventListener('touchmove', (e) => {
-    e.preventDefault(); // requires passive: false
-    const t = e.touches[0];
-    const dx = t.clientX - touchStartX;
-    const dy = t.clientY - touchStartY;
-
-    // only block when swiping down (dy>0) and the page is at the top
-    const atTop = window.scrollY === 0 || (document.scrollingElement && document.scrollingElement.scrollTop === 0);
-    if (dy > 0 && atTop) {
-        e.preventDefault(); // requires passive: false on this listener
-    }
-}, { passive: false });
-
-board.addEventListener('touchend', (e) => {
-    const t = e.changedTouches[0];
-    const dx = t.clientX - touchStartX;
-    const dy = t.clientY - touchStartY;
-
-    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
-
-    let newDir = null;
-    if (Math.abs(dx) > Math.abs(dy)) {
-        newDir = dx > 0 ? 'right' : 'left';
-    } else {
-        newDir = dy > 0 ? 'down' : 'up';
-    }
-
-    const opposite = { up: 'down', down: 'up', left: 'right', right: 'left' };
-    if (opposite[direction] === newDir) return; // ignore reverse swipe
-
-    direction = newDir;
-}, { passive: true });
 
 setInterval(() => {
     const now = new Date();
