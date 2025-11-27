@@ -87,6 +87,7 @@ section .infos {
 
 .board{
     touch-action: none;
+    -ms-touch-action: none;
     border: 2px solid var(--border-primary-color);
     flex-grow: 1;
     display: grid;

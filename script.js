@@ -167,13 +167,13 @@ addEventListener('keydown', (e) => {
     direction = newDir;
 });
 
-addEventListener('touchstart', (e) => {
+board.addEventListener('touchstart', (e) => {
    const t = e.touches[0];
     touchStartX = t.clientX;
     touchStartY = t.clientY;
 }, { passive: true });
 
-addEventListener('touchmove', (e) => {
+board.addEventListener('touchmove', (e) => {
     const touchY = e.touches[0].clientY;
     const dy = touchY - touchStartY;
 
@@ -184,7 +184,7 @@ addEventListener('touchmove', (e) => {
     }
 }, { passive: false });
 
-addEventListener('touchend', (e) => {
+board.addEventListener('touchend', (e) => {
     const t = e.changedTouches[0];
     const dx = t.clientX - touchStartX;
     const dy = t.clientY - touchStartY;
