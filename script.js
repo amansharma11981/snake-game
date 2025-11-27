@@ -160,9 +160,7 @@ addEventListener('keydown', (e) => {
 let touchStartX = 0;
 let touchStartY = 0;
 
-document.addEventListener(touchmove, (e) => {
-    e.preventDefault();
-}, { passive: false });
+
 
 addEventListener('touchstart', (e) => {
     const t = e.touches[0];
